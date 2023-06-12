@@ -24,23 +24,29 @@ class App extends Component {
         )
       );
   }
-  render() {
-    const filteredMonsters = this.state.monsters.filter((monster) => {
-      return monster.name.toLocaleLowerCase().includes(this.state.searchString);
+
+  // Get value from input field and save in state
+  onSearchChange = (event) => {
+    const searchString = event.target.value.toLocaleLowerCase();
+
+    this.setState(() => {
+      return { searchString: searchString };
     });
+  };
+  render() {
+    // Destructuring state and methods
+    const { monsters, searchString } = this.state;
+    const { onSearchChange } = this;
+
+    // Save filtered array into new array to render data
+    const filteredMonsters = monsters.filter((monster) => {
+      return monster.name.toLocaleLowerCase().includes(searchString);
+    });
+
     return (
       <div className="App">
-        <input
-          type="search"
-          placeholder="Search"
-          onChange={(event) => {
-            const searchString = event.target.value.toLocaleLowerCase();
-
-            this.setState(() => {
-              return { searchString: searchString };
-            });
-          }}
-        />
+        <input type="search" placeholder="Search" onChange={onSearchChange} />
+        {/* Show data on browser using map */}
         {filteredMonsters.map((monster) => {
           return <h1 key={monster.id}>{monster.name}</h1>;
         })}
